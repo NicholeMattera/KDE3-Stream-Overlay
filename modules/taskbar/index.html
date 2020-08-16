@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Taskbar</title>
+        <style>
+            @font-face {
+                font-family: 'ds-digitalbold';
+                src: url('./fonts/ds-digib-webfont.woff2') format('woff2'),
+                    url('./fonts/ds-digib-webfont.woff') format('woff'),
+                    url('./fonts/ds-digib-webfont.ttf') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                background: transparent;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+            }
+            
+            .panel {
+                display: flex;
+                height: 92px;
+                width: 100vw;
+            }
+
+            .minimize {
+                background: #E9C1ED;
+                border-top: 4px solid #FFF;
+                border-right: 4px solid #655367;
+                border-bottom: 4px solid #655367;
+                border-left: 4px solid #FFF;
+                padding: 34px 4px;
+                width: 28px;
+            }
+
+            .taskbar {
+                align-items: center;
+                background: #E9C1ED;
+                border-top: 2px solid #FFF;
+                border-right: 2px solid #655367;
+                border-bottom: 2px solid #655367;
+                border-left: 2px solid #FFF;
+                display: flex;
+                flex: 1 1 auto;
+                padding: 2px;
+            }
+
+            .spacer {
+                flex: 1 1 auto;
+            }
+            
+            .item {
+                padding: 0 12px;
+                line-height: 78px;
+            }
+
+            .item > img {
+                vertical-align: middle;
+            }
+            
+            .item.selected {
+                border-top: 2px solid #655367;
+                border-right: 2px solid #FFF;
+                border-bottom: 2px solid #FFF;
+                border-left: 2px solid #655367;
+            }
+
+            .divider {
+                margin-right: 2px;
+            }
+
+            .clock {
+                background: #E9C1ED url('./images/clock.png') repeat top left;
+                border-top: 2px solid #655367;
+                border-right: 2px solid #FFF;
+                border-bottom: 2px solid #FFF;
+                border-left: 2px solid #655367;
+                color: black;
+                font-family: 'ds-digitalbold';
+                font-size: 48px;
+                line-height: 78px;
+                margin: 0;
+                text-align: center;
+                text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+                width: 130px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="panel">
+            <div class="minimize">
+                <img src="./images/minimize.png" width="10" height="16" />
+            </div>
+            <div class="taskbar" id="taskbar">
+                <div class="spacer" id="spacer"></div>
+                <img class="divider" src="./images/divider.png" width="12" height="74" />
+                <div class="clock" id="clock"></div>
+            </div>
+        </div>
+
+        <script>
+            const getQueryVariable = (variable, defaultValue) => {
+                const query = window.location.search.substring(1)
+                const  vars = query.split('&')
+                for (let i = 0; i < vars.length; i++) {
+                    const pair = vars[i].split('=')
+                    if (decodeURIComponent(pair[0]) == variable) {
+                        return decodeURIComponent(pair[1])
+                    }
+                }
+
+                return defaultValue
+            }
+
+            const taskbar = document.querySelector('#taskbar')
+            const spacer = document.querySelector('#spacer')
+            const items = getQueryVariable('items', '').split(',')
+            items.unshift('./images/go.png')
+            items.forEach(item => {
+                const div = document.createElement('div')
+                div.classList.add('item')
+
+                const img = document.createElement('img')
+                img.src = item
+                img.width = 68
+                img.height = 68
+
+                div.appendChild(img)
+                taskbar.insertBefore(div, spacer)
+            });
+
+            const selected = parseInt(getQueryVariable('selected', '-1'))
+            if (selected >= 0) {
+                document.querySelectorAll('.item')[selected].classList.add('selected')
+            }
+
+            const clock = document.querySelector('#clock')
+            const updateClock = () => {
+                const now = new Date()
+                let text = '';
+
+                if (now.getHours() < 10) {
+                    text += '0'
+                }
+                text += `${now.getHours()}:`
+
+                if (now.getMinutes() < 10) {
+                    text += '0'
+                }
+                text += now.getMinutes()
+                
+                if (text !== clock.innerText)
+                    clock.innerText = text
+            }
+
+            updateClock();
+            setInterval(updateClock, 1000);
+        </script>
+    </body>
+</html>

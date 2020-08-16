@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Window</title>
+        <style>
+            html, body {
+                background: transparent;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+            }
+            
+            .window {
+                display: grid;
+                height: 100vh;
+                left: 0;
+                position: absolute;
+                top: 0;
+                width: 100vw;
+
+                grid-template-columns: 8px 60px min-content auto 132px 8px;
+                grid-template-rows: 40px 46px auto 16px;
+
+                grid-template-areas: 
+                    'top-left       top-left        title           handle          top-right       top-right'
+                    'left-fade      center          center          center          center          right'
+                    'left           center          center          center          center          right'
+                    'bottom-left    bottom-left     bottom-center   bottom-center   bottom-right    bottom-right';
+            }
+
+            .top-left {
+                background: transparent url('./images/TL.png') no-repeat top left;
+                grid-area: top-left;
+                position: relative;
+            }
+
+            .top-left > img {
+                left: 4px;
+                position: absolute;
+                top: 4px;
+            }
+
+            .top-title {
+                background: transparent url('./images/T1.png') repeat-x top left;
+                grid-area: title;
+            }
+
+            .top-title > h1 {
+                color: #FFF;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 24px;
+                font-smooth: never;
+                font-weight: normal;
+                line-height: 40px;
+                margin: 0;
+                padding: 0 8px 0 4px;
+                text-rendering: optimizeSpeed;
+                -webkit-font-smoothing: none;
+                white-space: nowrap;
+            }
+
+            .top-handle {
+                background: transparent url('./images/T2.png') repeat-x top left;
+                grid-area: handle;
+            }
+
+            .top-right {
+                background: transparent url('./images/TR.png') no-repeat top right;
+                grid-area: top-right;
+            }
+
+            .left-fade {
+                background: transparent url('./images/L1.png') no-repeat top left;
+                grid-area: left-fade;
+            }
+
+            .center {
+                grid-area: center;
+            }
+
+            .right {
+                background: transparent url('./images/R.png') repeat-y top right;
+                grid-area: right;
+            }
+
+            .left {
+                background: transparent url('./images/L2.png') repeat-y top left;
+                grid-area: left;
+            }
+
+            .bottom-left {
+                background: transparent url('./images/BL.png') no-repeat bottom left;
+                grid-area: bottom-left;
+            }
+
+            .bottom {
+                background: transparent url('./images/B.png') repeat-x bottom left;
+                grid-area: bottom-center;
+            }
+
+            .bottom-right {
+                background: transparent url('./images/BR.png') no-repeat bottom right;
+                grid-area: bottom-right;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="window">
+            <div class="top-left">
+                <img width="32" height="32" id="icon" />
+            </div>
+            <div class="top-title">
+                <h1 id="title"></h1>
+            </div>
+            <div class="top-handle"></div>
+            <div class="top-right"></div>
+
+            <div class="left-fade"></div>
+            <div class="center" id="center"></div>
+            <div class="right"></div>
+
+            <div class="left"></div>
+
+            <div class="bottom-left"></div>
+            <div class="bottom"></div>
+            <div class="bottom-right"></div>
+        </div>
+
+        <script>
+            const getQueryVariable = (variable, defaultValue) => {
+                const query = window.location.search.substring(1)
+                const  vars = query.split('&')
+                for (let i = 0; i < vars.length; i++) {
+                    const pair = vars[i].split('=')
+                    if (decodeURIComponent(pair[0]) == variable) {
+                        return decodeURIComponent(pair[1])
+                    }
+                }
+
+                return defaultValue
+            }
+
+            const center = document.querySelector('#center')
+            center.style.backgroundColor = `#${getQueryVariable('background', '000')}`
+
+            const title = document.querySelector('#title')
+            title.innerText = getQueryVariable('title', '')
+
+            const icon = document.querySelector('#icon')
+            icon.src = getQueryVariable('icon', '')
+        </script>
+    </body>
+</html>
